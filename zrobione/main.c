@@ -7,6 +7,7 @@
 #define MULTIPLIER_X1    (1<<5)
 #define OUTPUT_POWER_ON  (1<<4)
 
+unsigned int Sin_LUT[360];
 
 void Delay(int iTimeInMs){
 	int iCycle ;
@@ -27,11 +28,10 @@ void Delay(int iTimeInMs){
 	 
 	S0SPDR = MULTIPLIER_X1 | OUTPUT_POWER_ON | (( uiVoltage & 0xF00 ) >> 8);
 	 
-  S0SPSR &= !SPIF;
   while(!(S0SPSR & SPIF)){}; 
 
 	S0SPDR = uiVoltage & 0x0FF ;
-	S0SPSR &= !SPIF;
+
 	while(!(S0SPSR & SPIF)){}; 
 
 	IO0SET = CS;
@@ -43,19 +43,54 @@ void Delay(int iTimeInMs){
 	 DAC_MCP4921_Set((uiVoltage*4096)/3300);
  }
  
- // czas jednego okresu sinusa 4.2 przedzialki przy skali 5ms 4.2 * 5ms = 21ms
  
  void DAC_MCP4921_Sinus(void){
-	 unsigned int uiIterator;
-	 for(uiIterator = 0; uiIterator < 360; uiIterator++){
-		DAC_MCP4921_Set_mV(sin((uiIterator * 3.14) / 180)*1000 + 1000) ;
+	 unsigned int uiPhase;
+	 for(uiPhase = 0; uiPhase < 360; uiPhase++){
+		DAC_MCP4921_Set_mV(sin((uiPhase * 3.14) / 180)*1000 + 1000) ;
 	 }
  };
  
  
+void DAC_MCP4921_Sinus_fast(void){
+	 unsigned int uiPhase;
+	 for(uiPhase = 0; uiPhase < 360; uiPhase++){
+		DAC_MCP4921_Set_mV(Sin_LUT[uiPhase]) ;
+	 }
+ };
+ 
+ 
+ void Create_Sin_LUT(void){
+	 
+unsigned int uiPhase;
+
+for(uiPhase = 0; uiPhase < 360; uiPhase++){
+	Sin_LUT[uiPhase]=(sin((uiPhase * 3.14) / 180)*1000 + 1000) ;
+}	 
+ }
+ 
+ 
  int main(){
+
+	Create_Sin_LUT();
 	 while(1){
-		 DAC_MCP4921_Sinus();
+		 DAC_MCP4921_Sinus_fast();
 	 }; 
  };
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+ 
+ 
+ 
+ 
  

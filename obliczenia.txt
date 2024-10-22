@@ -1,0 +1,4 @@
+pclk = 60mhz/4 = 15mhz
+spi clock = 15/8 = 1,875 MHz    ---->     0,53us
+16*0,53us = 8,48 us    ------> przeslane jedno slowo
+360* 8,48 us = 3052,8us = 3,052 ms ------> jeden okres 

@@ -1,0 +1,10 @@
+/*unsigned int Sinusy[360];
+unsigned int uiSinusIterator;
+
+ for(uiSinusIterator = 0; uiSinusIterator < 360; uiSinusIterator++){
+	Sinusy[uiSinusIterator]=(sin((uiSinusIterator * 3.14) / 180)*1000 + 1000) ;
+ }
+*/
+
+
+		// DAC_MCP4921_Set_mV(Sinusy[uiIterator]) ;
